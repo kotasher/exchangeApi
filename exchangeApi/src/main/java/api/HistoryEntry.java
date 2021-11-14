@@ -2,6 +2,9 @@ package api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 public class HistoryEntry {
     @JsonProperty("date")
     String date;
@@ -14,12 +17,19 @@ public class HistoryEntry {
     @JsonProperty("volume")
     double volume;
 
-    public HistoryEntry(String date, double close, double high, double low, double volume) {
-        this.date = date;
+    public HistoryEntry(Long unixtime, double close, double high, double low, double volume) {
+        this.date = HistoryEntry.convertToHumanTime(unixtime);
         this.close = close;
         this.high = high;
         this.low = low;
         this.volume = volume;
+    }
+
+    private static String convertToHumanTime(Long unixtime) {
+        final var cal = Calendar.getInstance();
+        cal.setTimeInMillis(unixtime * 1000);
+        final var dateFormatter = new SimpleDateFormat("dd.MM.yyyy");
+        return dateFormatter.format(cal.getTime());
     }
 
     @Override

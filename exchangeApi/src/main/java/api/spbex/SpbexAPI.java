@@ -14,6 +14,9 @@ import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class SpbexAPI implements IApi {
     private static final String BASE_URL = "https://investcab.ru/api";
@@ -44,10 +47,8 @@ public class SpbexAPI implements IApi {
 
         final var historyEntries = new ArrayList<HistoryEntry>(jsonHistory.time.size());
         for (int i = 0; i < jsonHistory.time.size(); i++) {
-            final var time = new java.util.Date(jsonHistory.time.get(i) * 1000);
-            final var dateFormatter = new SimpleDateFormat("dd.MM.yyyy");
-            final var humanTime = dateFormatter.format(time);
-            final var historyEntry = new HistoryEntry(humanTime, jsonHistory.close.get(i),
+            final var historyEntry = new HistoryEntry(
+                    jsonHistory.time.get(i), jsonHistory.close.get(i),
                     jsonHistory.high.get(i), jsonHistory.low.get(i), 0);
             historyEntries.add(historyEntry);
         }
