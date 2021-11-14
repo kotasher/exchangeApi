@@ -21,12 +21,16 @@ public class MoexSecurityBoardsJson {
     public MoexSecurity getPrimary() {
         int i;
         for (i = 0; i < data.size(); i++) {
-            if (data.get(i).get(3).equals("1")) {
+            if (data.get(i).get(MoexAPI.ColumnsSecurity.is_primary.ordinal()).equals("1")) {
                 break;
             }
         }
         final var result = data.get(i);
-        return new MoexSecurity(result.get(0), result.get(1), result.get(2));
+        return new MoexSecurity(
+                result.get(MoexAPI.ColumnsSecurity.boardid.ordinal()),
+                result.get(MoexAPI.ColumnsSecurity.market.ordinal()),
+                result.get(MoexAPI.ColumnsSecurity.engine.ordinal())
+        );
     }
 }
 

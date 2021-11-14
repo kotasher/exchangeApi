@@ -18,12 +18,19 @@ import java.util.List;
 public class MoexAPI implements IApi {
     private static final String BASE_URL = "https://iss.moex.com";
 
-    private enum Columns {
+    public enum ColumnsHistory {
         TRADEDATE,
         CLOSE,
         HIGH,
         LOW,
         VOLUME,
+    }
+    
+    public enum ColumnsSecurity {
+        boardid,
+        market,
+        engine,
+        is_primary,
     }
 
     @Override
@@ -48,13 +55,13 @@ public class MoexAPI implements IApi {
         for (Object object : jsonHistoryAccumulator) {
             //noinspection unchecked
             final var list = (ArrayList<String>) object;
-            final var unixtime = getUnixTime(list.get(Columns.TRADEDATE.ordinal()));
+            final var unixtime = getUnixTime(list.get(ColumnsHistory.TRADEDATE.ordinal()));
             final var historyEntry = new HistoryEntry(
                     unixtime,
-                    Double.parseDouble(list.get(Columns.CLOSE.ordinal())),
-                    Double.parseDouble(list.get(Columns.HIGH.ordinal())),
-                    Double.parseDouble(list.get(Columns.LOW.ordinal())),
-                    Long.parseLong(list.get(Columns.VOLUME.ordinal()))
+                    Double.parseDouble(list.get(ColumnsHistory.CLOSE.ordinal())),
+                    Double.parseDouble(list.get(ColumnsHistory.HIGH.ordinal())),
+                    Double.parseDouble(list.get(ColumnsHistory.LOW.ordinal())),
+                    Long.parseLong(list.get(ColumnsHistory.VOLUME.ordinal()))
             );
             historyEntries.add(historyEntry);
         }
@@ -69,9 +76,13 @@ public class MoexAPI implements IApi {
 
     URI getSecurityParametersUri(String ticker) throws URISyntaxException {
         final var stringUri = String.format(
-                "%s/iss/securities/%s.json?iss.only=boards&iss.meta=off&boards.columns=boardid,market,engine,is_primary",
+                "%s/iss/securities/%s.json?iss.only=boards&iss.meta=off&boards.columns=%s,%s,%s,%s",
                 MoexAPI.BASE_URL,
-                ticker
+                ticker,
+                ColumnsSecurity.boardid.name(),
+                ColumnsSecurity.market.name(),
+                ColumnsSecurity.engine.name(),
+                ColumnsSecurity.is_primary.name()
         );
         return new URI(stringUri);
     }
@@ -93,11 +104,11 @@ public class MoexAPI implements IApi {
                 ranges[0],
                 ranges[1],
                 start,
-                Columns.TRADEDATE.name(),
-                Columns.CLOSE.name(),
-                Columns.HIGH.name(),
-                Columns.LOW.name(),
-                Columns.VOLUME.name()
+                ColumnsHistory.TRADEDATE.name(),
+                ColumnsHistory.CLOSE.name(),
+                ColumnsHistory.HIGH.name(),
+                ColumnsHistory.LOW.name(),
+                ColumnsHistory.VOLUME.name()
         );
         return new URI(stringUri);
     }
