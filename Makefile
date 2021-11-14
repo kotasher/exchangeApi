@@ -4,11 +4,17 @@ APP_NAME := thereisnoml/quotes
 CONTAINER_NAME := thereisnomlquotes
 
 all:
+	make maven
+	make docker
+
+maven:
 	${MAVEN} clean package
+
+docker:
 	${DOCKER} build . -t ${APP_NAME}
 
 run:
-	${DOCKER} run -d -p 8080:8080 --name ${CONTAINER_NAME} ${APP_NAME}
+	${DOCKER} run -d -p 65080:8080 --name ${CONTAINER_NAME} ${APP_NAME}
 
 stop:
 	-${DOCKER} kill ${CONTAINER_NAME}
