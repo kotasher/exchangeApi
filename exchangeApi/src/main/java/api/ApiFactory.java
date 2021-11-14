@@ -1,6 +1,7 @@
 package api;
 
 import api.enums.ApiType;
+import api.moex.MoexAPI;
 import api.spbex.SpbexAPI;
 
 import java.util.HashMap;
@@ -11,6 +12,7 @@ public class ApiFactory {
     static {
         instances = new HashMap<>();
         instances.put(ApiType.SPBEX, new SpbexAPI());
+        instances.put(ApiType.MOEX, new MoexAPI());
     }
 
     public IApi createApi(ApiType apiType) {
