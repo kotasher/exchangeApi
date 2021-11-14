@@ -7,19 +7,19 @@ import java.util.List;
 
 public class SpbexTickerJson {
     @JsonProperty("t")
-    public List<Long> time = null;
+    public List<Long> time;
     @SuppressWarnings("unused")
     @JsonProperty("o")
-    public List<Double> open = null;
+    public List<Double> open;
     @JsonProperty("h")
-    public List<Double> high = null;
+    public List<Double> high;
     @JsonProperty("l")
-    public List<Double> low = null;
+    public List<Double> low;
     @JsonProperty("c")
-    public List<Double> close = null;
+    public List<Double> close;
     @SuppressWarnings("unused")
     @JsonProperty("s")
-    public String status = null;
+    public String status;
 }
 
 // json example

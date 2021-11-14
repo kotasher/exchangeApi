@@ -7,15 +7,15 @@ import java.util.Calendar;
 
 public class HistoryEntry {
     @JsonProperty("date")
-    String date;
+    final String date;
     @JsonProperty("close")
-    double close;
+    final double close;
     @JsonProperty("high")
-    double high;
+    final double high;
     @JsonProperty("low")
-    double low;
+    final double low;
     @JsonProperty("volume")
-    long volume;
+    final long volume;
 
     public HistoryEntry(long unixtime, double close, double high, double low, long volume) {
         this.date = HistoryEntry.convertToHumanTime(unixtime);

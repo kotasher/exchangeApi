@@ -1,9 +1,9 @@
 package api.moex;
 
 public class MoexSecurity {
-    String board;
-    String market;
-    String engine;
+    final String board;
+    final String market;
+    final String engine;
 
     @Override
     public String toString() {

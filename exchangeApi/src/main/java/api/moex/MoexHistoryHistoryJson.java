@@ -6,9 +6,9 @@ import java.util.List;
 
 public class MoexHistoryHistoryJson {
     @JsonProperty("columns")
-    public List<String> columns = null;
+    public List<String> columns;
     @JsonProperty("data")
-    public List<List<String>> data = null;
+    public List<List<String>> data;
 
     @Override
     public String toString() {
