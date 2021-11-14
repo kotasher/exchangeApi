@@ -15,9 +15,9 @@ public class HistoryEntry {
     @JsonProperty("low")
     double low;
     @JsonProperty("volume")
-    double volume;
+    long volume;
 
-    public HistoryEntry(Long unixtime, double close, double high, double low, double volume) {
+    public HistoryEntry(long unixtime, double close, double high, double low, long volume) {
         this.date = HistoryEntry.convertToHumanTime(unixtime);
         this.close = close;
         this.high = high;
