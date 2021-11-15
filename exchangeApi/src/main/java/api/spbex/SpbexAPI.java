@@ -39,7 +39,7 @@ public class SpbexAPI implements IApi {
         return new long[]{1434014660L, System.currentTimeMillis() / 1000L};
     }
 
-    URI getUri(String ticker, @SuppressWarnings("SameParameterValue") String resolution,
+    private URI getUri(String ticker, @SuppressWarnings("SameParameterValue") String resolution,
                long rangeStart, long rangeEnd) throws URISyntaxException {
         final var stringUri = String.format(
                 "%s/chistory?symbol=%s&resolution=%s&from=%d&to=%d",
@@ -52,7 +52,7 @@ public class SpbexAPI implements IApi {
         return new URI(stringUri);
     }
 
-    URI getUriDayResolution(String ticker) throws URISyntaxException {
+    private URI getUriDayResolution(String ticker) throws URISyntaxException {
         final var ranges = getRanges();
         return getUri(ticker, "D", ranges[0], ranges[1]);
     }

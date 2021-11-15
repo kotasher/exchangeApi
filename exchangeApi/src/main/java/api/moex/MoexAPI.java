@@ -18,7 +18,7 @@ import java.util.List;
 public class MoexAPI implements IApi {
     private static final String BASE_URL = "https://iss.moex.com";
 
-    public enum ColumnsHistory {
+    private enum ColumnsHistory {
         TRADEDATE,
         CLOSE,
         HIGH,
@@ -26,7 +26,7 @@ public class MoexAPI implements IApi {
         VOLUME,
     }
     
-    public enum ColumnsSecurity {
+    enum ColumnsSecurity {
         boardid,
         market,
         engine,
@@ -68,13 +68,13 @@ public class MoexAPI implements IApi {
         return historyEntries;
     }
 
-    long getUnixTime(String stringDate) throws ParseException {
+    private long getUnixTime(String stringDate) throws ParseException {
         final var format = new SimpleDateFormat("yyyy-MM-dd");
         final var date = format.parse(stringDate);
         return date.getTime() / 1000L;
     }
 
-    URI getSecurityParametersUri(String ticker) throws URISyntaxException {
+    private URI getSecurityParametersUri(String ticker) throws URISyntaxException {
         final var stringUri = String.format(
                 "%s/iss/securities/%s.json?iss.only=boards&iss.meta=off&boards.columns=%s,%s,%s,%s",
                 MoexAPI.BASE_URL,
@@ -87,12 +87,12 @@ public class MoexAPI implements IApi {
         return new URI(stringUri);
     }
 
-    String[] getRanges() {
+    private String[] getRanges() {
         final var dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return new String[]{"2015-01-01", LocalDateTime.now().format(dateFormatter)};
     }
 
-    URI getSecurityHistoryUri(String ticker, MoexSecurity security, int start) throws URISyntaxException {
+    private URI getSecurityHistoryUri(String ticker, MoexSecurity security, int start) throws URISyntaxException {
         final var ranges = getRanges();
         final var stringUri = String.format(
                 "%s/iss/history/engines/%s/markets/%s/boards/%s/securities/%s.json?from=%s&till=%s&start=%d&iss.meta=off&history.columns=%s,%s,%s,%s,%s",
@@ -113,7 +113,7 @@ public class MoexAPI implements IApi {
         return new URI(stringUri);
     }
 
-    MoexSecurity getSecurityParameters(String ticker) throws URISyntaxException, IOException, InterruptedException {
+    private MoexSecurity getSecurityParameters(String ticker) throws URISyntaxException, IOException, InterruptedException {
         final var uri = this.getSecurityParametersUri(ticker);
         final var response = Utils.httpGetUrl(uri);
         final var mapper = new ObjectMapper();
