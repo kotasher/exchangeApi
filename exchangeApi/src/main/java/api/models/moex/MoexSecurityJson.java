@@ -1,5 +1,7 @@
-package api.moex;
+package api.models.moex;
 
+import api.models.moex.MoexSecurity;
+import api.models.moex.MoexSecurityBoardsJson;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class MoexSecurityJson {

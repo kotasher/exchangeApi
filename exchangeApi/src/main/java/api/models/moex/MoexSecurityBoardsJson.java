@@ -1,5 +1,7 @@
-package api.moex;
+package api.models.moex;
 
+import api.models.moex.MoexSecurity;
+import api.models.moex.MoexSecurityBoardsDataJson;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
@@ -8,7 +10,7 @@ public class MoexSecurityBoardsJson {
     @JsonProperty("columns")
     public List<String> columns;
     @JsonProperty("data")
-    public List<List<String>> data;
+    public List<MoexSecurityBoardsDataJson> data;
 
     @Override
     public String toString() {
@@ -19,18 +21,9 @@ public class MoexSecurityBoardsJson {
     }
 
     public MoexSecurity getPrimary() {
-        int i;
-        for (i = 0; i < data.size(); i++) {
-            if (data.get(i).get(MoexAPI.ColumnsSecurity.is_primary.ordinal()).equals("1")) {
-                break;
-            }
-        }
-        final var result = data.get(i);
-        return new MoexSecurity(
-                result.get(MoexAPI.ColumnsSecurity.boardid.ordinal()),
-                result.get(MoexAPI.ColumnsSecurity.market.ordinal()),
-                result.get(MoexAPI.ColumnsSecurity.engine.ordinal())
-        );
+        final var security = data.stream()
+                .filter(e -> e.isPrimary == 1).findFirst().orElseThrow();
+        return new MoexSecurity(security.boardID, security.market, security.engine);
     }
 }
 

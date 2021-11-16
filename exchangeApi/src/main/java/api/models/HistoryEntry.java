@@ -1,4 +1,4 @@
-package api;
+package api.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -34,7 +34,7 @@ public class HistoryEntry {
 
     @Override
     public String toString() {
-        return "api.HistoryEntry{" +
+        return "api.models.HistoryEntry{" +
                 "date='" + date + '\'' +
                 ", close=" + close +
                 ", high=" + high +

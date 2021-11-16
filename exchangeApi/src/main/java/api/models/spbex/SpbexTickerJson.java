@@ -1,4 +1,4 @@
-package api.spbex;
+package api.models.spbex;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;

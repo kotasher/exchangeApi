@@ -1,8 +1,12 @@
 package api.moex;
 
-import api.HistoryEntry;
-import api.IApi;
-import api.Utils;
+import api.models.HistoryEntry;
+import api.interfaces.IApi;
+import api.models.moex.MoexHistoryHistoryDataJson;
+import api.models.moex.MoexHistoryJson;
+import api.models.moex.MoexSecurity;
+import api.models.moex.MoexSecurityJson;
+import api.utils.Utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
@@ -25,7 +29,7 @@ public class MoexAPI implements IApi {
         LOW,
         VOLUME,
     }
-    
+
     enum ColumnsSecurity {
         boardid,
         market,
@@ -38,7 +42,7 @@ public class MoexAPI implements IApi {
         final var security = getSecurityParameters(ticker);
 
         var start = 0;
-        final var jsonHistoryAccumulator = new ArrayList<>();
+        final var jsonHistoryAccumulator = new ArrayList<MoexHistoryHistoryDataJson>();
         while (true) {
             final var uri = getSecurityHistoryUri(ticker, security, start);
             final var response = Utils.httpGetUrl(uri);
@@ -52,17 +56,9 @@ public class MoexAPI implements IApi {
         }
 
         final var historyEntries = new ArrayList<HistoryEntry>(jsonHistoryAccumulator.size());
-        for (Object object : jsonHistoryAccumulator) {
-            //noinspection unchecked
-            final var list = (ArrayList<String>) object;
-            final var unixtime = getUnixTime(list.get(ColumnsHistory.TRADEDATE.ordinal()));
-            final var historyEntry = new HistoryEntry(
-                    unixtime,
-                    Double.parseDouble(list.get(ColumnsHistory.CLOSE.ordinal())),
-                    Double.parseDouble(list.get(ColumnsHistory.HIGH.ordinal())),
-                    Double.parseDouble(list.get(ColumnsHistory.LOW.ordinal())),
-                    Long.parseLong(list.get(ColumnsHistory.VOLUME.ordinal()))
-            );
+        for (final var entry : jsonHistoryAccumulator) {
+            final var unixtime = getUnixTime(entry.tradeDate);
+            final var historyEntry = new HistoryEntry(unixtime, entry.close, entry.high, entry.low, entry.volume);
             historyEntries.add(historyEntry);
         }
         return historyEntries;

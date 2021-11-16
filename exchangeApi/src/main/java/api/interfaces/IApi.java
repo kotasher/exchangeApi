@@ -1,4 +1,6 @@
-package api;
+package api.interfaces;
+
+import api.models.HistoryEntry;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

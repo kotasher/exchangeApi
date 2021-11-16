@@ -1,4 +1,4 @@
-import api.ApiFactory;
+import api.factory.ApiFactory;
 import api.enums.ApiType;
 import org.junit.Test;
 

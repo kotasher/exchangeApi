@@ -1,5 +1,6 @@
-package api;
+package api.factory;
 
+import api.interfaces.IApi;
 import api.enums.ApiType;
 import api.moex.MoexAPI;
 import api.spbex.SpbexAPI;

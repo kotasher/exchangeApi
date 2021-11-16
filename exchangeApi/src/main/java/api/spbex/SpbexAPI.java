@@ -1,8 +1,9 @@
 package api.spbex;
 
-import api.HistoryEntry;
-import api.IApi;
-import api.Utils;
+import api.models.HistoryEntry;
+import api.interfaces.IApi;
+import api.models.spbex.SpbexTickerJson;
+import api.utils.Utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;

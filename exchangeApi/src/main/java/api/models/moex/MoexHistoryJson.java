@@ -1,5 +1,6 @@
-package api.moex;
+package api.models.moex;
 
+import api.models.moex.MoexHistoryHistoryJson;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class MoexHistoryJson {
@@ -11,5 +12,5 @@ public class MoexHistoryJson {
     }
 
     @JsonProperty("history")
-    MoexHistoryHistoryJson history;
+    public MoexHistoryHistoryJson history;
 }
