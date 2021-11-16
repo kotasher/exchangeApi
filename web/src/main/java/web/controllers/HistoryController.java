@@ -1,6 +1,6 @@
 package web.controllers;
 
-import api.HistoryEntry;
+import api.models.HistoryEntry;
 
 import java.util.List;
 

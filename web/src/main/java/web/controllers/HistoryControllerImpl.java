@@ -1,7 +1,7 @@
 package web.controllers;
 
-import api.ApiFactory;
-import api.HistoryEntry;
+import api.factory.ApiFactory;
+import api.models.HistoryEntry;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
