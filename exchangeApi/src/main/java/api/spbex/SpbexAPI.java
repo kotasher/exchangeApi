@@ -1,7 +1,7 @@
 package api.spbex;
 
-import api.models.HistoryEntry;
 import api.interfaces.IApi;
+import api.models.HistoryEntry;
 import api.models.spbex.SpbexTickerJson;
 import api.utils.Utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,8 +9,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class SpbexAPI implements IApi {
     private static final String BASE_URL = "https://investcab.ru/api";
@@ -26,14 +27,21 @@ public class SpbexAPI implements IApi {
         final var mapper = new ObjectMapper();
         final var jsonHistory = mapper.readValue(jsonRaw.substring(1, jsonRaw.length() - 1), SpbexTickerJson.class);
 
-        final var historyEntries = new ArrayList<HistoryEntry>(jsonHistory.time.size());
-        for (int i = 0; i < jsonHistory.time.size(); i++) {
-            final var historyEntry = new HistoryEntry(
-                    jsonHistory.time.get(i), jsonHistory.close.get(i),
-                    jsonHistory.high.get(i), jsonHistory.low.get(i), 0);
-            historyEntries.add(historyEntry);
+        final int size = Stream.of(
+                jsonHistory.time.size(), jsonHistory.close.size(),
+                jsonHistory.high.size(), jsonHistory.low.size()
+        ).min(Integer::compare).orElseThrow();
+        final var historyEntries = new HistoryEntry[size];
+        for (int i = 0; i < size; i++) {
+            historyEntries[i] = new HistoryEntry(
+                    jsonHistory.time.get(i),
+                    jsonHistory.close.get(i),
+                    jsonHistory.high.get(i),
+                    jsonHistory.low.get(i),
+                    0
+            );
         }
-        return historyEntries;
+        return Arrays.asList(historyEntries);
     }
 
     private long[] getRanges() {
@@ -41,7 +49,7 @@ public class SpbexAPI implements IApi {
     }
 
     private URI getUri(String ticker, @SuppressWarnings("SameParameterValue") String resolution,
-               long rangeStart, long rangeEnd) throws URISyntaxException {
+                       long rangeStart, long rangeEnd) throws URISyntaxException {
         final var stringUri = String.format(
                 "%s/chistory?symbol=%s&resolution=%s&from=%d&to=%d",
                 SpbexAPI.BASE_URL,

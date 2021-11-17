@@ -1,7 +1,7 @@
 package api.moex;
 
-import api.models.HistoryEntry;
 import api.interfaces.IApi;
+import api.models.HistoryEntry;
 import api.models.moex.MoexHistoryHistoryDataJson;
 import api.models.moex.MoexHistoryJson;
 import api.models.moex.MoexSecurity;
@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MoexAPI implements IApi {
@@ -43,10 +44,10 @@ public class MoexAPI implements IApi {
 
         var start = 0;
         final var jsonHistoryAccumulator = new ArrayList<MoexHistoryHistoryDataJson>();
+        final var mapper = new ObjectMapper();
         while (true) {
             final var uri = getSecurityHistoryUri(ticker, security, start);
             final var response = Utils.httpGetUrl(uri);
-            final var mapper = new ObjectMapper();
             final var jsonHistory = mapper.readValue(response, MoexHistoryJson.class);
             if (jsonHistory.history.data.size() == 0) {
                 break;
@@ -55,13 +56,13 @@ public class MoexAPI implements IApi {
             start += 100;
         }
 
-        final var historyEntries = new ArrayList<HistoryEntry>(jsonHistoryAccumulator.size());
-        for (final var entry : jsonHistoryAccumulator) {
+        final var historyEntries = new HistoryEntry[jsonHistoryAccumulator.size()];
+        for (int i = 0; i < jsonHistoryAccumulator.size(); i++) {
+            final var entry = jsonHistoryAccumulator.get(i);
             final var unixtime = getUnixTime(entry.tradeDate);
-            final var historyEntry = new HistoryEntry(unixtime, entry.close, entry.high, entry.low, entry.volume);
-            historyEntries.add(historyEntry);
+            historyEntries[i] = new HistoryEntry(unixtime, entry.close, entry.high, entry.low, entry.volume);
         }
-        return historyEntries;
+        return Arrays.asList(historyEntries);
     }
 
     private long getUnixTime(String stringDate) throws ParseException {
